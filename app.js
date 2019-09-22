@@ -1,5 +1,9 @@
 const canvas = document.getElementById('jsCanvas'); // 마우스를 인식할 곳을 불러온다.
-const ctx = canvas.getContext('2d'); // mdn canvas api를 사용해서 그릴 요소, canvas안에서 픽셀을 두루는 툴
+const ctx = canvas.getContext('2d'); // mdn canvas api를 사용해서 그릴 요소, canvas안에서 픽셀을 두루는 공간
+// canvas는 html5의 한 요소 이고, html의 픽셀을 다루는 것임
+const colors = document.getElementsByClassName('jsColor');
+canvas.width = 700;
+canvas.height = 700;
 
 ctx.strokeStyle = '#2c2c2c'; // about strokestyle MDN = https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
 ctx.lineWidth = 2.5; // 선 굵기를 정하는 곳
@@ -19,13 +23,19 @@ function onmouseMove(event) {
     const x = event.offsetX; // 정한 객체 내에서의 좌표
     const y = event.offsetY; // offset은 mousemove event의 객체
     if (!painting) {
-        // if i am not painting == 이게 painting이 false인걸ㄲ, true인걸까
+        // if i am not painting == painting = false
         ctx.beginPath(); // path를 시작하는점
         ctx.moveTo(x, y); // x,y를 이동하는 거 인듯
     } else {
         ctx.lineTo(x, y);
         ctx.stroke();
     }
+}
+
+function handleColorClick(event) {
+    // console.log(event.target.style); // evnet. target은 뭐일 까 event가 element일 떄 해당 타겟을 확인하는 경우인가?
+    const color = event.target.style.backgroundColor;
+    ctx.strokeStyle = color;
 }
 
 if (canvas) {
@@ -41,3 +51,8 @@ mousemove  객체들
 clientX and Y = 전체 윈도우에서의 좌표
 offsetX = 정한 객체 내에서의 좌표
 */
+
+Array.from(colors).forEach((color) => // => 이게 뭘까? forEach문을 사용하고 각 for를 사용한 각요소에 적용하는 건가?
+    color.addEventListener('click', handleColorClick)
+);
+// Array.from은 array형식으로 값을 내보내줌
