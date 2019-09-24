@@ -4,12 +4,16 @@ const ctx = canvas.getContext("2d"); // mdn canvas api를 사용해서 그릴 �
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
+
 const INITIAL_COLOR = "#2c2c2c";
 const CANVAS_SIZE = 700;
 
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.strokeStyle = INITIAL_COLOR; // about strokestyle MDN = https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5; // 선 굵기를 정하는 곳
@@ -65,10 +69,22 @@ function handleModeClick() {
 
 function handleCanvasClick() {
   if (filling) {
+    // filling이 true일때
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 }
 
+function handleCM(event) {
+  event.preventDefault(); // 우클릭 방지
+}
+
+function handleSaveClick() {
+  const image = canvas.toDataURL(); // canvas를 이미지 url로 바꾸기
+  const link = document.createElement("a"); //a 태그를 만들고
+  link.href = image; // URL을 설정하고
+  link.download = "PaintJS[EXPORT].png"; // 저장할 이미지 이름을 만들고
+  link.click(); // a를 클릭하는걸로 가라 버튼을 만들어서 클릭해서 바로 다운로드 받는걸로
+}
 if (canvas) {
   canvas.addEventListener("mousemove", onmouseMove); // 마우스의 움직임을 확인하는 event
   canvas.addEventListener("mousedown", startPainting);
@@ -76,6 +92,7 @@ if (canvas) {
   canvas.addEventListener("mouseup", stopPainting); // mouseup은 클릭을 해제한 상태, 즉 그림을 그만 그리겠다는 event
   canvas.addEventListener("mouseleave", stopPainting); // 마우스가 캔버스 즉, 우리가 그림을 그릴 좌표 밖으로 벗어나면 그리기를 그만 해야함
   canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleCM); // 우클릭 메뉴 이벤트
 }
 
 /*
@@ -96,4 +113,8 @@ if (range) {
 
 if (mode) {
   mode.addEventListener("click", handleModeClick);
+}
+
+if (saveBtn) {
+  saveBtn.addEventListener("click", handleSaveClick);
 }
