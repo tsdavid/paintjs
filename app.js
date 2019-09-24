@@ -4,11 +4,14 @@ const ctx = canvas.getContext("2d"); // mdn canvas api를 사용해서 그릴 �
 const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
+const INITIAL_COLOR = "#2c2c2c";
+const CANVAS_SIZE = 700;
 
-canvas.width = 700;
-canvas.height = 700;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
 
-ctx.strokeStyle = "#2c2c2c"; // about strokestyle MDN = https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
+ctx.strokeStyle = INITIAL_COLOR; // about strokestyle MDN = https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5; // 선 굵기를 정하는 곳
 
 let painting = false; // 기본적으로 그림을 그리는 것을 거짓으로 정하고
@@ -40,6 +43,7 @@ function handleColorClick(event) {
   // console.log(event.target.style); // evnet. target은 뭐일 까 event가 element일 떄 해당 타겟을 확인하는 경우인가?
   const color = event.target.style.backgroundColor;
   ctx.strokeStyle = color;
+  ctx.fillStyle = color;
 }
 
 function handleRangeChange(event) {
@@ -59,12 +63,19 @@ function handleModeClick() {
   }
 }
 
+function handleCanvasClick() {
+  if (filling) {
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
 if (canvas) {
   canvas.addEventListener("mousemove", onmouseMove); // 마우스의 움직임을 확인하는 event
   canvas.addEventListener("mousedown", startPainting);
   // 마우스를 클릭해 그림을 그리를 걸 측정하는 event, mousedown은 클릭하고 있을때 를 감지하는 event
   canvas.addEventListener("mouseup", stopPainting); // mouseup은 클릭을 해제한 상태, 즉 그림을 그만 그리겠다는 event
   canvas.addEventListener("mouseleave", stopPainting); // 마우스가 캔버스 즉, 우리가 그림을 그릴 좌표 밖으로 벗어나면 그리기를 그만 해야함
+  canvas.addEventListener("click", handleCanvasClick);
 }
 
 /*
